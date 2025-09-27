@@ -1,4 +1,3 @@
-
 // Computer Hand - Generate and match random number between 0-3
 function getComputerChoice() {
   const randomNum = Math.floor(Math.random() * 3);
@@ -9,13 +8,13 @@ function getComputerChoice() {
   }
 }
 
-// Human Hand - Takes user choice
+// Step 3: Human Hand (with null safety)
 function getHumanChoice() {
   let input = prompt("Rock, Paper, or Scissors?");
 
   // Handle cancel button
   if (input === null) {
-    return null;
+    return null; // or you could throw an error or return a special value
   }
 
   let choice = input.toLowerCase().trim();
@@ -23,7 +22,7 @@ function getHumanChoice() {
   while (!['rock', 'paper', 'scissors'].includes(choice)) {
     input = prompt("Invalid choice. Please enter Rock, Paper, or Scissors:");
     if (input === null) {
-      return null;
+      return null; // Handle cancel in retry prompt too
     }
     choice = input.toLowerCase().trim();
   }
