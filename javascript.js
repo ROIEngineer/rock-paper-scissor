@@ -1,4 +1,4 @@
-// Computer Hand - Generate and match random number between 0-3
+// Computer Selection - Generate and match random number between 0-3
 function getComputerChoice() {
   const randomNum = Math.floor(Math.random() * 3);
   switch (randomNum) {
@@ -8,7 +8,7 @@ function getComputerChoice() {
   }
 }
 
-// Step 3: Human Hand (with null safety)
+// Player Selection (with null safety)
 function getHumanChoice() {
   let input = prompt("Rock, Paper, or Scissors?");
 
@@ -98,3 +98,13 @@ function playGame() {
 }
 
 playGame();
+
+
+
+
+
+
+
+
+
+
