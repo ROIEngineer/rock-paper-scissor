@@ -89,7 +89,12 @@ function playRound(humanChoice) {
     checkForMatchWinner();
     return 'human';
   } else {
+    computerScore++;
+    setRoundMessage(`Computer wins this round - ${computerChoice} beats ${humanChoice}.`);
+    appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
     console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+    updateScoreDisplay();
+    checkForMatchWinner();
     return 'computer';
   }
 }
