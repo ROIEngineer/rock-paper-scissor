@@ -24,6 +24,10 @@ function getComputerChoice() {
   }
 }
 
+// Update the Score Display
+function updateScoreDisplay() {
+  scoreDiv.textContent = `Your Score: ${humanScore} - Computer: ${computerScore}`;
+}
 // Player Selection (with null safety)
 function getHumanChoice() {
   let input = prompt("Rock, Paper, or Scissors?");
@@ -71,9 +75,6 @@ function playRound(humanChoice, computerChoice) {
 }
 
 function playGame() {
-  let humanScore = 0;
-  let computerScore = 0;
-
   for (let round = 1; round <= 5; round++) {
     console.log(`\n=== Round ${round} ===`);
 
