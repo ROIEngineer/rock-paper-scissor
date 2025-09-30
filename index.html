@@ -10,14 +10,27 @@
 <body>
 
   <div class="container">
-    <button id="rock">Rock</button>
-    <button id="paper">Paper</button>
-    <button id="scissor">Scissor</button>
-    <div class="result">
-      <p id="result"></p>
+    <!-- Title -->
+    <h1>Rock, Paper, Scissor</h1>
+
+    <!-- Score Section -->
+    <p class="score" id="score">Your Score: 0 - Computer: 0</p>
+
+    <!-- Buttons Section -->
+    <div class="controls">
+      <button id="rock">Rock</button>
+      <button id="paper">Paper</button>
+      <button id="scissor">Scissor</button>
     </div>
+
+    <!-- Results Section -->
+    <div class="result" id="results">
+      <div id="roundMessage" class="muted">Click to begin</div>
+      <div class="lastRound"></div>
+    </div>
+
+    <!-- Restart Button -->
+    <button class="restart">Play again</button>
   </div>
-
-
 </body>
 </html>
