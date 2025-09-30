@@ -39,6 +39,21 @@ function appendLastRound() {
   lastRound.textContent = text;
 }
 
+function disableChoiceButtons(disabled) {
+  rockBtn.disabled = disabled;
+  paperBtn.disabled = disabled;
+  scissorsBtn.disabled = disabled;
+  if (disabled) {
+    rockBtn.style.opacity = '0.6';
+    paperBtn.style.opacity = '0.6';
+    scissorsBtn.style.opacity = '0.6';
+  } else {
+    rockBtn.style.opacity = '1';
+    paperBtn.style.opacity = '1';
+    scissorsBtn.style.opacity = '1';
+  }
+}
+
 // Player Selection (with null safety)
 function getHumanChoice() {
   let input = prompt("Rock, Paper, or Scissors?");
@@ -99,8 +114,30 @@ function playRound(humanChoice) {
   }
 }
 
+function checkForMatchWinner() {
+  if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) {
+    if (humanScore > computerScore) {
+      setRoundMessage(`YOU WIN THE GAME! Final: ${humanScore} - ${computerScience}`);
+    } else if (computerScore > humanScore) {
+      setRoundMessage(`COMPUTER WINS THE GAME! Final: ${computerScore} - ${humanScore}`);
+    } else {
+      setRoundMessage(`It's a tie at ${humanScore} - ${computerScore}`);
+    }
+
+    // lock inputs and show restart control
+    disableChoiceButtons(true);
+    restartBtn.style.display = 'inline-block';
+  }
+}
+
+function handlePlayerChoice() {
+  // if game already finished, ignore clicks
+  if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) return;
+  playRound(choice);
+}
+
 function playGame() {
-  for (let round = 1; round <= 5; round++) {
+  for (let round = 1; round <= 10; round++) {
     console.log(`\n=== Round ${round} ===`);
 
     const humanSelection = getHumanChoice();
