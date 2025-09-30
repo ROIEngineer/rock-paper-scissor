@@ -28,6 +28,17 @@ function getComputerChoice() {
 function updateScoreDisplay() {
   scoreDiv.textContent = `Your Score: ${humanScore} - Computer: ${computerScore}`;
 }
+
+// Round Message
+function setRoundMessage() {
+  roundMessage.textContent = text;
+}
+
+// Append Last Round
+function appendLastRound() {
+  lastRound.textContent = text;
+}
+
 // Player Selection (with null safety)
 function getHumanChoice() {
   let input = prompt("Rock, Paper, or Scissors?");
@@ -50,11 +61,15 @@ function getHumanChoice() {
 }
 
 // Entire Game
-function playRound(humanChoice, computerChoice) {
+function playRound(humanChoice) {
+  // Normalize
   humanChoice = humanChoice.toLowerCase();
-  computerChoice = computerChoice.toLowerCase();
+  const computerChoice = computerChoice();
 
+  // Handle tie events
   if (humanChoice === computerChoice) {
+    setRoundMessage(`Tie - both chose ${humanChoice}.`);
+    appendLastRound(`Tie this round.`);
     console.log(`Tie! Both chose ${humanChoice}`);
     return 'tie';
   }
@@ -66,7 +81,12 @@ function playRound(humanChoice, computerChoice) {
   );
 
   if (humanWins) {
+    humanScore++;
+    setRoundMessage(`You win this round - ${humanChoice} beats ${computerChoice}`);
+    appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
     console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+    updateScoreDisplay();
+    checkForMatchWinner();
     return 'human';
   } else {
     console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
