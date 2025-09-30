@@ -1,10 +1,26 @@
+// --- Game Stat ---
+let humanScore = 0;
+let computerScore = 0;
+const WINNING_SCORE = 5;
+
+// --- DOM refs ---
+const rockBtn = document.getElementById('rock');
+const paperBtn = document.getElementById('paper');
+const scissorsBtn = document.getElementById('scissors');
+const resultsDiv = document.getElementById('results');
+const roundMessage = document.getElementById('roundMessage');
+const lastRound = document.getElementById('lastRound');
+const scoreDiv = document.getElementById('score');
+const restartBtn = document.getElementById('restart');
+
+
 // Computer Selection - Generate and match random number between 0-3
 function getComputerChoice() {
   const randomNum = Math.floor(Math.random() * 3);
   switch (randomNum) {
-    case 0: return "Rock";
-    case 1: return "Paper";
-    case 2: return "Scissor";
+    case 0: return "rock";
+    case 1: return "paper";
+    case 2: return "scissor";
   }
 }
 
