@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateScoreDisplay() {
-    if (scoreDiv) scoreDiv.textContent = `You: ${humanScore} — Computer: ${computerScore}`;
+    if (scoreDiv) scoreDiv.textContent = `You: ${humanScore} | Computer: ${computerScore}`;
   }
 
   function setRoundMessage(text = '') {
@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   // --- Core round logic ---
   function playRound(humanChoice) {
     if (!humanChoice) return;
@@ -59,9 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dbg('playRound', { humanChoice, computerChoice, beforeScores: { humanScore, computerScore } });
 
+    // Tie Events
     if (humanChoice === computerChoice) {
-      setRoundMessage(`Tie — both chose ${humanChoice}.`);
-      appendLastRound(`Tie this round.`);
+      setRoundMessage(`Tie`);
+      // appendLastRound(`Tie this round.`);
       return 'tie';
     }
 
@@ -73,16 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (humanWins) {
       humanScore++;
-      setRoundMessage(`You win this round — ${humanChoice} beats ${computerChoice}.`);
-      appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
+      setRoundMessage(`You win!`);
+      appendLastRound(`You: ${capitalize(humanChoice)} | Computer: ${capitalize(computerChoice)}`);
       updateScoreDisplay();
       checkForMatchWinner();
       dbg('round result', 'human', { humanScore, computerScore });
       return 'human';
     } else {
       computerScore++;
-      setRoundMessage(`Computer wins this round — ${computerChoice} beats ${humanChoice}.`);
-      appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
+      setRoundMessage(`Computer wins`);
+      appendLastRound(`You: ${capitalize(humanChoice)} | Computer: ${capitalize(computerChoice)}`);
       updateScoreDisplay();
       checkForMatchWinner();
       dbg('round result', 'computer', { humanScore, computerScore });
@@ -93,9 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkForMatchWinner() {
     if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) {
       if (humanScore > computerScore) {
-        setRoundMessage(`🎉 YOU WIN THE GAME! Final: ${humanScore} — ${computerScore}`);
+        setRoundMessage(`YOU WON! Final Score: ${humanScore} - ${computerScore}`);
       } else if (computerScore > humanScore) {
-        setRoundMessage(`💻 COMPUTER WINS THE GAME! Final: ${computerScore} — ${humanScore}`);
+        setRoundMessage(`COMPUTER WINS! Final Score: ${computerScore} - ${humanScore}`);
       } else {
         setRoundMessage(`It's a tie at ${humanScore} — ${computerScore}`);
       }
