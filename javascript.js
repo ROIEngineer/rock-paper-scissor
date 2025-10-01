@@ -141,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
       humanScore = 0;
       computerScore = 0;
       updateScoreDisplay();
-      setRoundMessage('Click a button to begin. First to 5 wins.');
-      appendLastRound('');
+      setRoundMessage('Click to Begin');
+      appendLastRound();
       restartBtn.style.display = 'none';
       disableChoiceButtons(false);
       dbg('game restarted');
@@ -151,5 +151,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // initial UI state
   updateScoreDisplay();
-  setRoundMessage('Click a button to begin. First to 5 wins.');
+  setRoundMessage('Click to Begin');
 });
