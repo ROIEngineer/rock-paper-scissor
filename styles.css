@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  outline: 1px solid red;
 }
 
 body {
@@ -25,3 +24,38 @@ body {
   background-color: white;
   padding: 30px;
 }
+
+h1, p, .result, .controls {
+  margin-bottom: 15px;
+}
+
+#roundMessage, #lastRound {
+  margin: 5px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.controls > button {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  background: #6F00FE;
+}
+
+#restart {
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  background: #6F00FE;
+}
+
