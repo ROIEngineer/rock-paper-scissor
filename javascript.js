@@ -1,189 +1,150 @@
-// --- Game Stat ---
-let humanScore = 0;
-let computerScore = 0;
-const WINNING_SCORE = 5;
+document.addEventListener('DOMContentLoaded', () => {
+  // Toggle for debug logging (set to false in production)
+  const DEV = true;
+  const dbg = (...args) => { if (DEV) console.log(...args); };
 
-// --- DOM refs ---
-const rockBtn = document.getElementById('rock');
-const paperBtn = document.getElementById('paper');
-const scissorsBtn = document.getElementById('scissors');
-const resultsDiv = document.getElementById('results');
-const roundMessage = document.getElementById('roundMessage');
-const lastRound = document.getElementById('lastRound');
-const scoreDiv = document.getElementById('score');
-const restartBtn = document.getElementById('restart');
+  // --- Game State ---
+  let humanScore = 0;
+  let computerScore = 0;
+  const WINNING_SCORE = 5;
 
+  // --- DOM refs (queried after DOM loaded) ---
+  const rockBtn = document.getElementById('rock');
+  const paperBtn = document.getElementById('paper');
+  const scissorsBtn = document.getElementById('scissors');
+  const resultsDiv = document.getElementById('results');
+  const roundMessage = document.getElementById('roundMessage');
+  const lastRound = document.getElementById('lastRound');
+  const scoreDiv = document.getElementById('score');
+  const restartBtn = document.getElementById('restart');
 
-// Computer Selection - Generate and match random number between 0-3
-function getComputerChoice() {
-  const randomNum = Math.floor(Math.random() * 3);
-  switch (randomNum) {
-    case 0: return "rock";
-    case 1: return "paper";
-    case 2: return "scissor";
-  }
-}
+  // Parent container for delegation (falls back to individual buttons if missing)
+  const controls = document.querySelector('.controls');
 
-// Update the Score Display
-function updateScoreDisplay() {
-  scoreDiv.textContent = `Your Score: ${humanScore} - Computer: ${computerScore}`;
-}
-
-// Round Message
-function setRoundMessage() {
-  roundMessage.textContent = text;
-}
-
-// Append Last Round
-function appendLastRound() {
-  lastRound.textContent = text;
-}
-
-function disableChoiceButtons(disabled) {
-  rockBtn.disabled = disabled;
-  paperBtn.disabled = disabled;
-  scissorsBtn.disabled = disabled;
-  if (disabled) {
-    rockBtn.style.opacity = '0.6';
-    paperBtn.style.opacity = '0.6';
-    scissorsBtn.style.opacity = '0.6';
-  } else {
-    rockBtn.style.opacity = '1';
-    paperBtn.style.opacity = '1';
-    scissorsBtn.style.opacity = '1';
-  }
-}
-
-// Player Selection (with null safety)
-function getHumanChoice() {
-  let input = prompt("Rock, Paper, or Scissors?");
-
-  // Handle cancel button
-  if (input === null) {
-    return null; // or you could throw an error or return a special value
-  }
-
-  let choice = input.toLowerCase().trim();
-
-  while (!['rock', 'paper', 'scissors'].includes(choice)) {
-    input = prompt("Invalid choice. Please enter Rock, Paper, or Scissors:");
-    if (input === null) {
-      return null; // Handle cancel in retry prompt too
+  // --- Helpers ---
+  function getComputerChoice() {
+    const randomNum = Math.floor(Math.random() * 3);
+    switch (randomNum) {
+      case 0: return 'rock';
+      case 1: return 'paper';
+      default: return 'scissors';
     }
-    choice = input.toLowerCase().trim();
-  }
-  return choice;
-}
-
-// Entire Game
-function playRound(humanChoice) {
-  // Normalize
-  humanChoice = humanChoice.toLowerCase();
-  const computerChoice = computerChoice();
-
-  // Handle tie events
-  if (humanChoice === computerChoice) {
-    setRoundMessage(`Tie - both chose ${humanChoice}.`);
-    appendLastRound(`Tie this round.`);
-    console.log(`Tie! Both chose ${humanChoice}`);
-    return 'tie';
   }
 
-  const humanWins = (
-    (humanChoice === 'rock' && computerChoice === 'scissors') ||
-    (humanChoice === 'paper' && computerChoice === 'rock') ||
-    (humanChoice === 'scissors' && computerChoice === 'paper')
-  );
-
-  if (humanWins) {
-    humanScore++;
-    setRoundMessage(`You win this round - ${humanChoice} beats ${computerChoice}`);
-    appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
-    console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-    updateScoreDisplay();
-    checkForMatchWinner();
-    return 'human';
-  } else {
-    computerScore++;
-    setRoundMessage(`Computer wins this round - ${computerChoice} beats ${humanChoice}.`);
-    appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
-    console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-    updateScoreDisplay();
-    checkForMatchWinner();
-    return 'computer';
+  function updateScoreDisplay() {
+    if (scoreDiv) scoreDiv.textContent = `You: ${humanScore} — Computer: ${computerScore}`;
   }
-}
 
-function checkForMatchWinner() {
-  if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) {
-    if (humanScore > computerScore) {
-      setRoundMessage(`YOU WIN THE GAME! Final: ${humanScore} - ${computerScience}`);
-    } else if (computerScore > humanScore) {
-      setRoundMessage(`COMPUTER WINS THE GAME! Final: ${computerScore} - ${humanScore}`);
+  function setRoundMessage(text = '') {
+    if (roundMessage) roundMessage.textContent = text;
+  }
+
+  function appendLastRound(text = '') {
+    if (lastRound) lastRound.textContent = text;
+  }
+
+  function disableChoiceButtons(disabled) {
+    [rockBtn, paperBtn, scissorsBtn].forEach(btn => {
+      if (!btn) return;
+      btn.disabled = disabled;
+      btn.style.opacity = disabled ? '0.6' : '1';
+    });
+  }
+
+  // --- Core round logic ---
+  function playRound(humanChoice) {
+    if (!humanChoice) return;
+    humanChoice = humanChoice.toLowerCase();
+    const computerChoice = getComputerChoice();
+
+    dbg('playRound', { humanChoice, computerChoice, beforeScores: { humanScore, computerScore } });
+
+    if (humanChoice === computerChoice) {
+      setRoundMessage(`Tie — both chose ${humanChoice}.`);
+      appendLastRound(`Tie this round.`);
+      return 'tie';
+    }
+
+    const humanWins = (
+      (humanChoice === 'rock' && computerChoice === 'scissors') ||
+      (humanChoice === 'paper' && computerChoice === 'rock') ||
+      (humanChoice === 'scissors' && computerChoice === 'paper')
+    );
+
+    if (humanWins) {
+      humanScore++;
+      setRoundMessage(`You win this round — ${humanChoice} beats ${computerChoice}.`);
+      appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
+      updateScoreDisplay();
+      checkForMatchWinner();
+      dbg('round result', 'human', { humanScore, computerScore });
+      return 'human';
     } else {
-      setRoundMessage(`It's a tie at ${humanScore} - ${computerScore}`);
+      computerScore++;
+      setRoundMessage(`Computer wins this round — ${computerChoice} beats ${humanChoice}.`);
+      appendLastRound(`You: ${humanChoice} | Computer: ${computerChoice}`);
+      updateScoreDisplay();
+      checkForMatchWinner();
+      dbg('round result', 'computer', { humanScore, computerScore });
+      return 'computer';
     }
-
-    // lock inputs and show restart control
-    disableChoiceButtons(true);
-    restartBtn.style.display = 'inline-block';
   }
-}
 
-function handlePlayerChoice() {
-  // if game already finished, ignore clicks
-  if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) return;
-  playRound(choice);
-}
+  function checkForMatchWinner() {
+    if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) {
+      if (humanScore > computerScore) {
+        setRoundMessage(`🎉 YOU WIN THE GAME! Final: ${humanScore} — ${computerScore}`);
+      } else if (computerScore > humanScore) {
+        setRoundMessage(`💻 COMPUTER WINS THE GAME! Final: ${computerScore} — ${humanScore}`);
+      } else {
+        setRoundMessage(`It's a tie at ${humanScore} — ${computerScore}`);
+      }
 
-function playGame() {
-  for (let round = 1; round <= 10; round++) {
-    console.log(`\n=== Round ${round} ===`);
+      disableChoiceButtons(true);
+      if (restartBtn) restartBtn.style.display = 'inline-block';
+    }
+  }
 
-    const humanSelection = getHumanChoice();
-
-    // Check if user cancelled the game
-    if (humanSelection === null) {
-      console.log("Game cancelled by user.");
+  function handlePlayerChoice(choice) {
+    if (!choice) {
+      dbg('handlePlayerChoice called without a choice argument');
       return;
     }
-
-    const computerSelection = getComputerChoice();
-
-    console.log(`You: ${humanSelection} | Computer: ${computerSelection}`);
-
-    const result = playRound(humanSelection, computerSelection);
-
-    // Update scores based on result
-    if (result === 'human') {
-      humanScore++;
-    } else if (result === 'computer') {
-      computerScore++;
-    }
-    console.log(`Current Score: You ${humanScore} - ${computerScore} Computer`);
+    if (humanScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) return;
+    playRound(choice);
   }
 
-  // Final results
-  console.log("\n GAME OVER - Final Results:");
-  console.log(`Your Score: ${humanScore} | Computer Score: ${computerScore}`);
-
-  if (humanScore > computerScore) {
-    console.log("YOU WIN THE GAME!");
-  } else if (computerScore > humanScore) {
-    console.log("COMPUTER WINS THE GAME!");
+  // --- Event wiring (delegation with fallback) ---
+  if (controls) {
+    controls.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      // allow either data-choice attribute or the button id (keeps your current HTML unchanged)
+      const choice = btn.dataset && btn.dataset.choice ? btn.dataset.choice : btn.id;
+      if (!choice) return;
+      handlePlayerChoice(choice);
+    });
   } else {
-    console.log("IT'S A TIE!");
+    // fallback for older markup — attach individually if present
+    if (rockBtn) rockBtn.addEventListener('click', () => handlePlayerChoice('rock'));
+    if (paperBtn) paperBtn.addEventListener('click', () => handlePlayerChoice('paper'));
+    if (scissorsBtn) scissorsBtn.addEventListener('click', () => handlePlayerChoice('scissors'));
   }
-}
 
-playGame();
+  if (restartBtn) {
+    restartBtn.addEventListener('click', () => {
+      humanScore = 0;
+      computerScore = 0;
+      updateScoreDisplay();
+      setRoundMessage('Click a button to begin. First to 5 wins.');
+      appendLastRound('');
+      restartBtn.style.display = 'none';
+      disableChoiceButtons(false);
+      dbg('game restarted');
+    });
+  }
 
-
-
-
-
-
-
-
-
-
+  // initial UI state
+  updateScoreDisplay();
+  setRoundMessage('Click a button to begin. First to 5 wins.');
+});
